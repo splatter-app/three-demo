@@ -20,7 +20,7 @@ document.body.appendChild(canvas);
 const renderer = new THREE.WebGLRenderer({ canvas, context, antialias: false });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setClearColor(0x000000);
+renderer.setClearColor(0x102030);
 
 // set up splatter
 const splatter = new Splatter(renderer, {splatId: 'fmd-iuw'});
@@ -50,6 +50,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // animation loop
 function animate() {
     renderer.render(scene, camera);
+    renderer.resetState();
     splatter.render(camera);
     requestAnimationFrame(animate);
 }
