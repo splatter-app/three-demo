@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Splatter } from './splatter-three.js';
 
+// set world up direction
+THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
+
 // create WebGL2 context - required for Splatter
 const options = {
     antialias: false,
@@ -23,12 +26,13 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setClearColor(0x102030);
 
 // set up splatter
-const splatter = new Splatter(renderer, {splatId: 'fmd-iuw'});
+const splatter = new Splatter(renderer, {splatId: 'avl-n4y'});
 
 // set up scene
 const scene = new THREE.Scene();
 
 const gridHelper = new THREE.GridHelper(10, 10);
+gridHelper.rotation.x = Math.PI / 2;
 scene.add(gridHelper);
 
 const geometry = new THREE.BoxGeometry();
@@ -43,7 +47,7 @@ scene.add(light);
 scene.add(new THREE.AmbientLight(0xffffff));
 
 // set up camera and controls
-const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 camera.position.set(4, 4, 4);
 const controls = new OrbitControls(camera, renderer.domElement);
 
