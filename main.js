@@ -5,7 +5,7 @@ import { Splatter } from './splatter-three.js';
 // set world up direction
 THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 
-// create WebGL2 context - required for Splatter
+// create WebGL2 context -- required for Splatter
 const options = {
     antialias: false,
     alpha: true,
@@ -20,13 +20,15 @@ if (!context) {
 document.body.appendChild(canvas);
 
 // set up Three.js renderer
-const renderer = new THREE.WebGLRenderer({ canvas, context, antialias: false });
+const renderer = new THREE.WebGLRenderer({ canvas, context });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setClearColor(0x102030);
 
-// set up splatter
-const splatter = new Splatter(renderer, {splatId: 'avl-n4y'});
+// set up Splatter
+const splatter = new Splatter(context, {splatId: 'fmd-iuw'});
+splatter.setPixelRatio(1); // render splats at CSS pixels for better performance
+//splatter.setPixelRatio(window.devicePixelRatio); // render at device pixels for highest quality
 
 // set up scene
 const scene = new THREE.Scene();
@@ -48,13 +50,12 @@ scene.add(new THREE.AmbientLight(0xffffff));
 
 // set up camera and controls
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-camera.position.set(4, 4, 4);
+camera.position.set(-4, 4, 2);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 // animation loop
 function animate() {
     renderer.render(scene, camera);
-    renderer.resetState();
     splatter.render(camera);
     requestAnimationFrame(animate);
 }
