@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Splatter } from './splatter-three.js';
+import { Splatter } from 'splatter-three';
 
 // set world up direction
 THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
