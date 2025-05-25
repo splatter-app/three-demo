@@ -2,9 +2,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Splatter } from 'splatter-three';
 
-// set world up direction
-THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
-
 // create WebGL2 context -- required for Splatter
 const options = {
     antialias: false,
@@ -27,14 +24,12 @@ renderer.setClearColor(0x102030);
 
 // set up Splatter
 const splatter = new Splatter(context, {splatId: 'fmd-iuw'});
-splatter.setPixelRatio(1); // render splats at CSS pixels for better performance
-//splatter.setPixelRatio(window.devicePixelRatio); // render at device pixels for highest quality
+splatter.setTransform(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 
 // set up scene
 const scene = new THREE.Scene();
 
 const gridHelper = new THREE.GridHelper(10, 10);
-gridHelper.rotation.x = Math.PI / 2;
 scene.add(gridHelper);
 
 const geometry = new THREE.BoxGeometry();
