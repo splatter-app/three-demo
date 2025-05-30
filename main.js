@@ -20,21 +20,21 @@ document.body.appendChild(canvas);
 const renderer = new THREE.WebGLRenderer({ canvas, context });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setClearColor(0x102030);
+renderer.setClearColor(0x000000);
 
 // set up Splatter
-const splatter = new Splatter(context, {splatId: 'fmd-iuw'});
-splatter.setTransform(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+const splatter = new Splatter(context, {splatId: '7yr-idb'});
+splatter.setTransform(new THREE.Matrix4().makeRotationX(130 / 180 * Math.PI));
 
 // set up scene
 const scene = new THREE.Scene();
 
-const gridHelper = new THREE.GridHelper(10, 10);
-scene.add(gridHelper);
+const grid = new THREE.GridHelper(10, 10);
+grid.position.set(0, -1, 0);
+scene.add(grid);
 
 const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x44aa88 });
 const cube = new THREE.Mesh(new THREE.BoxGeometry(), cubeMaterial);
-cube.position.set(0, 0.5, 0);
 scene.add(cube);
 
 const ballMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 });
@@ -48,7 +48,7 @@ scene.add(new THREE.AmbientLight(0xffffff));
 
 // set up camera and controls
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-camera.position.set(-4, 4, 2);
+camera.position.set(3, 3, 3);
 
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -90,7 +90,7 @@ function resize() {
 let lastTime = -1e3;
 function onclick(event) {
     if (performance.now() - lastTime < 300) {
-        let pt = splatter.hitTest(camera, event.clientX, event.clientY);
+        let pt = splatter.hitTest(camera, [event.clientX, event.clientY]);
         if (pt) {
             controls.target.copy(pt);
             ball.position.copy(pt);
