@@ -13,11 +13,10 @@ import { Splatter } from 'splatter-three';
 const splatter = new Splatter(context, {splatId: '7yr-idb'});
 ```
 
-Render the splats at the end of the frame over Three.js content:
+Render the splats at the end of the frame over opaque Three.js content (with depth testing):
 ```js
 splatter.render(camera);
 ```
-
 
 ## Licensing
 
