@@ -83,7 +83,7 @@ function resize() {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
-    render();
+    update();
 }
 
 // recenter on double-click
@@ -105,5 +105,5 @@ update();
 
 window.addEventListener('resize', resize);
 controls.addEventListener('change', update);
-splatter.addEventListener('update', update);
+splatter.addEventListener('update', update); // important: redraw on streaming updates
 canvas.addEventListener('pointerdown', onclick);
