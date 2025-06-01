@@ -56,7 +56,10 @@ controls.dampingFactor = 0.25;
 controls.rotateSpeed = 0.5;
 
 // set up a splat shader effect
-// TODO
+splatter.setShaderEffect(`
+    float gray = dot(color, vec3(0.299, 0.587, 0.114)); /* luminance */
+    color = vec3(gray);
+    `);
 
 // render scene (on demand)
 function render(deltaTime) {
