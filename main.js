@@ -56,8 +56,9 @@ controls.dampingFactor = 0.25;
 controls.rotateSpeed = 0.5;
 
 // set up a splat shader effect
+splatter.addUniform('vec3', 'uWeights');
 splatter.setShaderEffect(`
-    float gray = dot(color, vec3(0.299, 0.587, 0.114)); /* luminance */
+    float gray = dot(color, uWeights);
     color = vec3(gray);
     `);
 
@@ -65,6 +66,7 @@ splatter.setShaderEffect(`
 function render(deltaTime) {
     frameRequested = false;
     renderer.render(scene, camera);
+    splatter.setUniform('uWeights', [0.299, 0.587, 0.114]);
     splatter.render(camera, controls.target);
     if (controls.update(deltaTime)) {
         update();
