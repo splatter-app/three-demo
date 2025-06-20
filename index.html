@@ -4,10 +4,26 @@
     <meta charset="utf-8">
     <title>Three.js / splatter.app integration demo</title>
     <style>
-      body { margin: 0; }
+      body {
+        margin: 0;
+      }
+      #spinner {
+        position: fixed;
+        top: 50%; left: 50%;
+        border: 7px solid #fffc;
+        border-top: 7px solid #fff4;
+        border-radius: 50%;
+        width: 40px; height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+      }
     </style>
   </head>
   <body>
+    <div id="spinner"></div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

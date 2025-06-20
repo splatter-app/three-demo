@@ -65,9 +65,11 @@ splatter.setShaderEffect(`
 // render scene (on demand)
 function render(deltaTime) {
     frameRequested = false;
+
     renderer.render(scene, camera);
     splatter.setUniform('uWeights', [0.299, 0.587, 0.114]);
     splatter.render(camera, controls.target);
+
     if (controls.update(deltaTime)) {
         update();
     };
@@ -105,10 +107,18 @@ function onclick(event) {
     lastTime = performance.now();
 }
 
+// watch number of loaded/displayed Gaussians, hide spinner when enough displayed
+function onloaded(totalLoaded, numDisplayed) {
+    if (totalLoaded > splatter.totalSize/2 || numDisplayed > 1e6) {
+        document.getElementById('spinner').style.display = 'none';
+    }
+}
+
 resize();
 update();
 
 window.addEventListener('resize', resize);
 controls.addEventListener('change', update);
-splatter.addEventListener('update', update); // important: redraw on streaming updates
+splatter.addEventListener('update', update); // important: redraw on streaming updates!
+splatter.addEventListener('loaded', onloaded);
 canvas.addEventListener('pointerdown', onclick);
