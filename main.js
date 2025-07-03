@@ -55,12 +55,19 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.rotateSpeed = 0.5;
 
-// set up a splat shader effect
+// set up a simple splat shader effect
 splatter.addUniform('vec3', 'uWeights');
 splatter.setShaderEffect(`
+    // make the splats grayscale
     float gray = dot(color, uWeights);
     color = vec3(gray);
-    `);
+`);
+
+// clipping demo: remove splats on the fly with GLSL code
+splatter.setClipTest(`
+    // discard splats beyond a certain distance from origin
+    if (length(position) + radius > 10.0) { return false; }
+`);
 
 // render scene (on demand)
 function render(deltaTime) {
