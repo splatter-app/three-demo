@@ -4,6 +4,8 @@ This is an example of integrating [splatter.app](https://splatter.app) in a simp
 
 To run it, first do `npm install` and then run `npx vite`.
 
+![](assets/demo.jpg)
+
 ## API
 
 A minimum integration consists of these steps:
