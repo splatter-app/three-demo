@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Splatter } from './splatter-three.js';
+import { Splatter } from 'splatter-three';
 
 // create WebGL2 context -- required for Splatter
 const options = {
