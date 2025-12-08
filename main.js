@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Splatter } from 'splatter-three';
+import { Splatter } from './splatter-three.js';
 
 // create WebGL2 context -- required for Splatter
 const options = {
@@ -19,18 +19,23 @@ document.body.appendChild(canvas);
 // set up Three.js renderer
 const renderer = new THREE.WebGLRenderer({ canvas, context });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000);
 
 // set up Splatter
-const splatter = new Splatter(context, {splatId: '7yr-idb'});
-splatter.setTransform(new THREE.Matrix4().makeRotationX(130 / 180 * Math.PI));
+const splatter = new Splatter(renderer, {splatId: 'pll-kj9'});
+
+// transform the splats, this is applied before all other transforms (view, projection)
+let origin = new THREE.Vector3(0, 23, 0);
+splatter.setTransform(
+    (new THREE.Matrix4().makeTranslation(origin)).multiply
+    (new THREE.Matrix4().makeRotationX(Math.PI)));
 
 // set up scene
 const scene = new THREE.Scene();
 
 const grid = new THREE.GridHelper(10, 10);
-grid.position.set(0, -1, 0);
+grid.position.set(0, 0.1, 0);
 scene.add(grid);
 
 const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x44aa88 });
@@ -48,7 +53,7 @@ scene.add(new THREE.AmbientLight(0xffffff));
 
 // set up camera and controls
 const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-camera.position.set(3, 3, 3);
+camera.position.set(-5, 5, -5);
 
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -56,28 +61,30 @@ controls.dampingFactor = 0.25;
 controls.rotateSpeed = 0.5;
 
 // set up a simple splat shader effect
-splatter.addUniform('vec3', 'uWeights');
+splatter.addUniform('float', 'effectTime');
+splatter.addUniform('vec3', 'origin');
 splatter.setShaderEffect(`
-    // make the splats grayscale
-    float gray = dot(color, uWeights);
-    color = vec3(gray);
+    // reveal effect
+    float dist = length(position - origin);
+    float delay = 2.0 + log(dist + 1.0) / 3.0;
+    float step = smoothstep(delay, delay + 0.1, effectTime);
+    scale = mix(vec3(0.005), scale, step);
 `);
-
-// clipping demo: remove splats on the fly with GLSL code
-splatter.setClipTest(`
-    // discard splats beyond a certain distance from origin
-    if (length(position) + radius > 10.0) { return false; }
-`);
+let revealStart = Infinity;
 
 // render scene (on demand)
 function render(deltaTime) {
     frameRequested = false;
 
     renderer.render(scene, camera);
-    splatter.setUniform('uWeights', [0.299, 0.587, 0.114]);
+
+    let effectTime = (performance.now() - revealStart) * 1e-3;
+    splatter.setUniform('effectTime', effectTime);
+    splatter.setUniform('origin', origin);
+
     splatter.render(camera, controls.target);
 
-    if (controls.update(deltaTime)) {
+    if (controls.update(deltaTime) || effectTime < 5.0) {
         update();
     };
 }
@@ -104,7 +111,7 @@ function resize() {
 let lastTime = -1e3;
 function onclick(event) {
     if (performance.now() - lastTime < 300) {
-        let pt = splatter.hitTest(camera, [event.clientX, event.clientY]);
+        let pt = splatter.hitTest(camera, [event.clientX, event.clientY], {alphaThreshold: 0.01});
         if (pt) {
             controls.target.copy(pt);
             ball.position.copy(pt);
@@ -118,6 +125,9 @@ function onclick(event) {
 function onloaded(totalLoaded, numDisplayed) {
     if (totalLoaded > splatter.totalSize/2 || numDisplayed > 1e6) {
         document.getElementById('spinner').style.display = 'none';
+        if (revealStart == Infinity) {
+            revealStart = performance.now(); // start shader effect
+        }
     }
 }
 
