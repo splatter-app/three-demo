@@ -12,7 +12,7 @@ A minimum integration consists of these steps:
 
 ```js
 import { Splatter } from 'splatter-three';
-const splatter = new Splatter(context, {splatId: '7yr-idb'});
+const splatter = new Splatter(renderer, {splatId: '7yr-idb'});
 ```
 
 Then render the splats at the end of the frame, over existing opaque Three.js content.
@@ -23,6 +23,6 @@ splatter.render(camera);
 
 ## Licensing
 
-The `splatter-three` module is available for licensing to Business and Enterprise customers. Please contact [info@splatter.app](mailto:info@splatter.app) to get access.
+The `splatter-three` module is available for licensing to Business and Enterprise customers. Please contact [info@splatter.app](mailto:info@splatter.app) to get a free trial access.
 
 
