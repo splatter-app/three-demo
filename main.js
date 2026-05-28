@@ -23,7 +23,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000);
 
 // set up Splatter
-const splatter = new Splatter(renderer, {splatId: 'pll-kj9'});
+const splatter = new Splatter(renderer, {splatId: '2qh-09m'});
 
 // transform the splats, this is applied before all other transforms (view, projection)
 let origin = new THREE.Vector3(0, 23, 0);
